@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Flights</title>
+</head>
+<body>
+    <h1>Available Flights</h1>
+    <form method="POST" action="{% url 'search_flights' %}">
+        {% csrf_token %}
+        <input name="initial_destination" placeholder="Initial Destination"/>
+        <input name="final_destination" placeholder="Final Destination"/>
+        <button type="submit">Search Flights</button>
+    </form>
+    {% if datas %}
+    <p>Total Flights : {{ datas|length }}</p>
+        <ul>
+            {% for data in datas %}
+                <li>{{ data.Name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ error }}</p>
+    {% endif %}
+</body>
+</html>
