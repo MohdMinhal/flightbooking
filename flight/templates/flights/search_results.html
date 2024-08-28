@@ -17,7 +17,7 @@
         <ol>
             {% for data in datas %}
                 <li>
-                    <a href="{% url 'flight_detail' data.route_id %}">
+                    <a href="{% url 'flight_detail' data.id %}">
                         {{ data }} 
                     </a>
                 </li>

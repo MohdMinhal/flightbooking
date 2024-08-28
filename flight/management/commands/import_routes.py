@@ -8,8 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         with open('flight/static/routes.dat', 'r') as file:
             csv_reader = csv.DictReader(file)
-            routes = [row for row in csv_reader if row['Source_airport_ID'] != '\\N' and row['Destination_airport_ID'] != '\\N']
-
+            routes = [row for row in csv_reader if row['Source_airport_ID'] != '\\N' and row['Destination_airport_ID'] != '\\N' and row['Airline_ID'] != '\\N']
         for row in routes:
             route_data = {
                 'airline_id': row['Airline_ID'],

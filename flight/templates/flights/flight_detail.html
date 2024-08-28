@@ -5,15 +5,15 @@
     <title>Flight Detail</title>
 </head>
 <body>
-    <h1>Flight - {{ flight.Route_id }}</h1>
-    <p>Airline: {{ flight.Airline }}</p>
-    <p>From: {{ flight.Source_airport }}, {{ flight.source_location }}</p>
-    <p>To: {{ flight.Destination_airport }}, {{ flight.destination_location }}</p>
+    <h1>Flight - {{ flight.id }}</h1>
+    <p>Airline: {{ flight.airline }}</p>
+    <p>From: {{ flight.source_airport }}, {{ flight.source_location }}</p>
+    <p>To: {{ flight.destination_airport }}, {{ flight.destination_location }}</p>
     <p>Departure: {{ flight.departure_time }}</p>
     <p>Arrival: {{ flight.arrival_time }}</p>
-    <p>Stops: {{ flight.Stops }} <small>Note: 0 means Direct Flight</small></p>
+    <p>Stops: {{ flight.stops }} <small>Note: 0 means Direct Flight</small></p>
     <p>Available Seats: {{ flight.available_seats }}</p>
-    <form method="post" action="{% url 'book_flight' flight.Route_id %}">
+    <form method="post" action="{% url 'book_flight' flight.id %}">
         {% csrf_token %}
         <label for="seats">Number of seats:</label>
         <input type="number" name="seats" id="seats" min="1" max="{{ flight.available_seats }}" value="1">
