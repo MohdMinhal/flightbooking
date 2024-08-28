@@ -7,8 +7,8 @@
 <body>
     <h1>Flight - {{ flight.id }}</h1>
     <p>Airline: {{ flight.airline }}</p>
-    <p>From: {{ flight.source_airport }}, {{ flight.source_location }}</p>
-    <p>To: {{ flight.destination_airport }}, {{ flight.destination_location }}</p>
+    <p>From: {{ flight.source_airport }}, {{ flight.origin }}</p>
+    <p>To: {{ flight.destination_airport }}, {{ flight.destination }}</p>
     <p>Departure: {{ flight.departure_time }}</p>
     <p>Arrival: {{ flight.arrival_time }}</p>
     <p>Stops: {{ flight.stops }} <small>Note: 0 means Direct Flight</small></p>

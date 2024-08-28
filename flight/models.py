@@ -1,6 +1,4 @@
 from django.db import models
-
-from django.db import models
 from django.contrib.auth.models import User
 
 class Airline(models.Model):
@@ -35,19 +33,29 @@ class Airport(models.Model):
     def __str__(self):
         return self.name
 
-from django.db import models
-
 class Route(models.Model):
     airline = models.ForeignKey('Airline', on_delete=models.CASCADE)
     source_airport = models.ForeignKey(Airport, related_name='outbound_routes', on_delete=models.CASCADE)
     destination_airport = models.ForeignKey(Airport, related_name='inbound_routes', on_delete=models.CASCADE)
+    origin = models.CharField(max_length=255, blank=True, null=True)
+    destination = models.CharField(max_length=255, blank=True, null=True)
     codeshare = models.CharField(max_length=255, blank=True, null=True)
     stops = models.IntegerField(blank=True, null=True)
     equipment = models.CharField(max_length=255, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.origin:
+            source_location = Airport.objects.get(id=self.source_airport_id)
+            self.origin = f"{source_location.city}, {source_location.country}"
+        
+        if not self.destination:
+            destination_location = Airport.objects.get(id=self.destination_airport_id)
+            self.destination = f"{destination_location.city}, {destination_location.country}"
+        
+        super().save(*args, **kwargs)
+    
     def __str__(self):
-        return f'Route from {self.source_airport} to {self.destination_airport}'
-
+        return f"{self.airline} from {self.source_airport} to {self.destination_airport}"
 
 
 class Flight(models.Model):
