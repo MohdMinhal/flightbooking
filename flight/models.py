@@ -3,6 +3,53 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import User
 
+class Airline(models.Model):
+    airline_id = models.IntegerField(primary_key=True)  # Assuming the first number in your CSV is an ID
+    name = models.CharField(max_length=255)
+    alias = models.CharField(max_length=255, blank=True, null=True)
+    iata = models.CharField(max_length=10, blank=True, null=True)
+    icao = models.CharField(max_length=10, blank=True, null=True)
+    callsign = models.CharField(max_length=255, blank=True, null=True)
+    country = models.CharField(max_length=255, blank=True, null=True)
+    active = models.CharField(max_length=1)  # Y/N
+
+    def __str__(self):
+        return self.name
+
+class Airport(models.Model):
+    airport_id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+    iata = models.CharField(max_length=10, blank=True, null=True)
+    icao = models.CharField(max_length=10, blank=True, null=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    altitude = models.IntegerField()
+    timezone = models.FloatField(blank=True, null=True)
+    dst = models.CharField(max_length=10, blank=True, null=True)
+    tz_database_time_zone = models.CharField(max_length=255, blank=True, null=True)
+    type = models.CharField(max_length=50, blank=True, null=True)
+    source = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+from django.db import models
+
+class Route(models.Model):
+    airline = models.ForeignKey('Airline', on_delete=models.CASCADE)
+    source_airport = models.ForeignKey(Airport, related_name='outbound_routes', on_delete=models.CASCADE)
+    destination_airport = models.ForeignKey(Airport, related_name='inbound_routes', on_delete=models.CASCADE)
+    codeshare = models.CharField(max_length=255, blank=True, null=True)
+    stops = models.IntegerField(blank=True, null=True)
+    equipment = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f'Route from {self.source_airport} to {self.destination_airport}'
+
+
+
 class Flight(models.Model):
     flight_number = models.CharField(max_length=10, unique=True)
     origin = models.CharField(max_length=100)
