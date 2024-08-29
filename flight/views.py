@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Airline, Airport, Route, Flight
+from .models import Airline, Airport, Route, Booking
 from django.db.models import Q
 import random
 
@@ -26,13 +26,12 @@ def search_flights(request):
         available_routes = Route.objects.filter(
             Q(source_airport_id__in=Airport.objects.filter(
                 Q(country=initial_destination) | Q(city=initial_destination))
-                    .values_list('airport_id', flat=True)) &
+              .values_list('airport_id', flat=True)) &
             Q(destination_airport_id__in=Airport.objects.filter(
                 Q(country=final_destination) | Q(city=final_destination))
-                    .values_list('airport_id', flat=True))
+              .values_list('airport_id', flat=True))
         )
 
-        
         return render(request, 'flights/search_results.html', {
             'initial_destination': initial_destination,
             'final_destination': final_destination,
@@ -44,7 +43,8 @@ def search_flights(request):
 def flight_detail(request, flight_id):
     route = Route.objects.get(id=flight_id)
 
-    route.available_seats= random.randint(0,54) #A logic to get available seats - Random for now
+    route.available_seats = random.randint(0, 54)
+    # A logic to get available seats - Random for now
     return render(request, 'flights/flight_detail.html', {'flight': route})
 
 
@@ -54,4 +54,14 @@ def book_flight(request, flight_id):
     if request.method == 'POST':
         seats = int(request.POST.get('seats', 1))
         
-    return render(request, 'flights/book_flight.html', {'flight': flight})
+        existing_booking = Booking.objects.filter(user=request.user, flight=flight).first()
+        if existing_booking:
+            return render(request, 'flights/book_flight.html', {'flight': existing_booking})
+        else:
+        
+            Booking.objects.create(
+                user=request.user,  
+                flight=flight,
+                seats_booked=seats
+            )
+            return HttpResponse('booking_success')

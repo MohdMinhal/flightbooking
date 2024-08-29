@@ -70,13 +70,23 @@ class Flight(models.Model):
         return f"{self.flight_number} from {self.origin} to {self.destination}"
 
 class Booking(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+        ('expired', 'Expired'),
+    ]
+        
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
+    flight = models.ForeignKey(Route, on_delete=models.CASCADE)
     booking_date = models.DateTimeField(auto_now_add=True)
     seats_booked = models.PositiveIntegerField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
 
     class Meta:
         unique_together = ('user', 'flight')
 
     def __str__(self):
-        return f"Booking by {self.user.username} for flight {self.flight.flight_number}"
+        return f"Booking by {self.user.username} for flight {self.flight.id}"
