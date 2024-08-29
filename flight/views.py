@@ -5,13 +5,9 @@ from .models import Airline, Airport, Route, Booking
 from django.db.models import Q
 import random
 
-# url = 'https://opensky-network.org/api/states/all'
-
-
 def flight_list(request):
     airlines = Airline.objects.filter(active="Y")
     return render(request, 'flights/flight_list.html', {'datas': airlines})
-
 
 def search_flights(request):
     if request.method == "POST":
@@ -38,7 +34,6 @@ def search_flights(request):
             'datas': available_routes,
         })
 
-
 @login_required
 def flight_detail(request, flight_id):
     route = Route.objects.get(id=flight_id)
@@ -46,7 +41,6 @@ def flight_detail(request, flight_id):
     route.available_seats = random.randint(0, 54)
     # A logic to get available seats - Random for now
     return render(request, 'flights/flight_detail.html', {'flight': route})
-
 
 @login_required
 def book_flight(request, flight_id):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.dateformat import DateFormat
 
 class Airline(models.Model):
     airline_id = models.IntegerField(primary_key=True)  # Assuming the first number in your CSV is an ID
@@ -89,4 +90,4 @@ class Booking(models.Model):
         unique_together = ('user', 'flight')
 
     def __str__(self):
-        return f"Booking by {self.user.username} for flight {self.flight.id}"
+        return f"Booking by {self.user.username} for flight {self.flight.id} on {DateFormat(self.booking_date).format('N j, Y, P')}"
